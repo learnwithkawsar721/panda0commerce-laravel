@@ -6,6 +6,7 @@ use App\Models\Banner;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Intervention\Image\Facades\Image;
 
 class BannerController extends Controller
 {
@@ -16,7 +17,9 @@ class BannerController extends Controller
      */
     public function index()
     {
-        return view('Admin.Banner.index');
+        return view('Admin.Banner.index',[
+            'banner_items'=>Banner::latest()->get(),
+        ]);
     }
 
     /**
@@ -37,21 +40,27 @@ class BannerController extends Controller
      */
     public function store(Request $request)
     {
-    //    $banner = Banner::create($request->except('_token','image'));
+       $banner = Banner::create($request->except('_token','image'));
         if($request->hasFile('image')){
 
             $photo_name = 'banner-'.Str::random(10).'-'.time().'.'.$request->file('image')->getClientOriginalExtension();
 
-            $path_name = public_path().DIRECTORY_SEPARATOR.'asset/admin/banner/';
+            $path ='asset/admin/banner/';
+            $path_name = public_path().DIRECTORY_SEPARATOR.$path;
 
             if(!File::isDirectory($path_name)){
 
               File::makeDirectory($path_name,0777,true,true);
 
             }
-            
+
+            Image::make($request->file('image'))->save($path_name.DIRECTORY_SEPARATOR.$photo_name,40);
+            Banner::where('id',$banner->id)->update([
+                'image'=>$path.'/'.$photo_name,
+            ]);
 
         }
+        return redirect(route('banner.index'));
 
     }
 

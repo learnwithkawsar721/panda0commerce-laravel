@@ -30,13 +30,16 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach ($banner_items as $item)
                     <tr>
-                        <td>1</td>
-                        <td>Lorem ipsum dolor sit.</td>
-                        <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum, repellat?</td>
-                        <td>$120</td>
-                        <td><a href="www.facebook.com">www.facebook.com</a></td>
-                        <td>img</td>
+                        <td>{{ $loop->index+1 }}</td>
+                        <td>{{ $item->title }}</td>
+                        <td>{{ $item->Discription }}</td>
+                        <td>{{ $item->price }}</td>
+                        <td><a href="{{ $item->link }}" target="_blank">{{ $item->link }}</a></td>
+                        <td>
+                            <img class="w-25" src="{{ asset('/'.$item->image)}}" alt="">
+                        </td>
                         <td>
                             <div class="btn-group" role="group" aria-label="Basic mixed styles example">
                                 <button type="button" class="btn btn-danger">Left</button>
@@ -44,8 +47,9 @@
                                 <button type="button" class="btn btn-success">Right</button>
                             </div>
                         </td>
-
                     </tr>
+                    @endforeach
+
                 </tbody>
             </table>
         </div>
