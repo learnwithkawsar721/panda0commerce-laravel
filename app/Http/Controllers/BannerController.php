@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Banner;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class BannerController extends Controller
 {
@@ -24,7 +26,7 @@ class BannerController extends Controller
      */
     public function create()
     {
-        //
+        return view('Admin.Banner.create');
     }
 
     /**
@@ -35,7 +37,22 @@ class BannerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+    //    $banner = Banner::create($request->except('_token','image'));
+        if($request->hasFile('image')){
+
+            $photo_name = 'banner-'.Str::random(10).'-'.time().'.'.$request->file('image')->getClientOriginalExtension();
+
+            $path_name = public_path().DIRECTORY_SEPARATOR.'asset/admin/banner/';
+
+            if(!File::isDirectory($path_name)){
+
+              File::makeDirectory($path_name,0777,true,true);
+
+            }
+            
+
+        }
+
     }
 
     /**
